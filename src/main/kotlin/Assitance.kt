@@ -1,5 +1,5 @@
-class Assistance {
-    fun bringCoffee(count: Int, typeCoffee: String) {
+class Assistance(val name: String) {
+    fun bringCoffee(count: Int = 1, typeCoffee: String = "espresso"): String {
         println("Get up")
         println("Go to coffee machine")
         repeat(count) {
@@ -10,5 +10,6 @@ class Assistance {
             println("Put coffee on the table")
             println("Return to the workplace")
         }
+        return typeCoffee
     }
 }

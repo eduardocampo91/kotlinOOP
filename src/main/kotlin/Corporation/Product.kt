@@ -1,3 +1,5 @@
+package Corporation
+
 class Product(val name: String = "b", val brand: String = "bb", val size: Float = 1f, val price: Int = 22) {
 
 //    constructor(name: String = "b", brand: String = "bb", size: Float = 1f, price:Int = 22) {

@@ -1,3 +1,6 @@
+import Corporation.Consultant
+import Corporation.Director
+
 fun main() {
     val director = Director("Chris", 40)
     val assistant = Assistance("Atlas")

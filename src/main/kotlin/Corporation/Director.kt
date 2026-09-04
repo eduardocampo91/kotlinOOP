@@ -1,4 +1,8 @@
-class Director(val name: String, val age: Int) {
+package Corporation
+
+import Assistance
+
+class Director(name: String, age: Int): Worker(name = name, age =age) {
     fun takeCoffee(assistant: Assistance, drinkName: String = ""){
         if (drinkName == "") {
             assistant.bringCoffee()
@@ -12,7 +16,7 @@ class Director(val name: String, val age: Int) {
 
     fun getConsultantToWork(consultant: Consultant) {
         val count = consultant.serveCustomers()
-        println("Consultant ${consultant.name} served $count clients")
+        println("Corporation.Consultant ${consultant.name} served $count clients")
 
     }
 }

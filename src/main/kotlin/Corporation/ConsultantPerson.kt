@@ -1,3 +1,5 @@
+import Corporation.Consultant
+
 fun main() {
     val person = Consultant("Kathe")
     person.sayHello()

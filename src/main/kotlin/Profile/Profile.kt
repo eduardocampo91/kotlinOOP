@@ -1,3 +1,5 @@
+package Profile
+
 fun main() {
     val inputName: String = "name please:"
     println(inputName)

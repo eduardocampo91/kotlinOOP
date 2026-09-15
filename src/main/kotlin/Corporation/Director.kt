@@ -19,4 +19,8 @@ class Director(name: String, age: Int): Worker(name = name, age =age) {
         println("Corporation.Consultant ${consultant.name} served $count clients")
 
     }
+
+    override fun work() {
+        println("I drink coffee")
+    }
 }

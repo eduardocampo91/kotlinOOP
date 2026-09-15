@@ -47,4 +47,25 @@ fun main() {
     (assistant as Assistance).bringCoffee()
 
     (director as Director).getConsultantToWork(consultant as Consultant)
+
+    // polymorphism
+    val director2: Director = Director("Gil", 25)
+    val consultant2: Consultant = Consultant("Bil", 25)
+    val assitant2: Assistance = Assistance("Phil", 25)
+
+    val employees = listOf<Worker>(director2, consultant2, assitant2)
+//
+//    director2.work()
+//    consultant2.work()
+//    assitant2.work()
+
+    for (employee in employees) {
+        employee.work()
+    }
+
+    val shoeCard = ShoeCard("sneakers", "nike", 39, 3000)
+    shoeCard.printInfo()
+
+    val accountant = Accountant("Rick", 56)
+    accountant.work()
 }

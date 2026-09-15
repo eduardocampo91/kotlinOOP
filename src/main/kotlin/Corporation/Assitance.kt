@@ -14,4 +14,8 @@ class Assistance(name: String, age: Int = 0): Worker(name = name, age = age) {
         }
         return typeCoffee
     }
+
+    override fun work() {
+        println("I am answering the phone")
+    }
 }

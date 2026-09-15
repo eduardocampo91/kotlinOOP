@@ -20,4 +20,8 @@ class Consultant(name: String, age: Int = 0): Worker(name = name, age = age) {
         return count
     }
 
+    override fun work() {
+        serveCustomers()
+    }
+
 }

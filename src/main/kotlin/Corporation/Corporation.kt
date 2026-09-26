@@ -68,4 +68,5 @@ fun main() {
 
     val accountant = Accountant("Rick", 56)
     accountant.work()
+    //accountant.registerItemEnum()
 }

@@ -1,14 +1,37 @@
 package Corporation
 
 class Accountant(name: String, age: Int): Worker(name = name, age = age) {
-
+    var doWork = true
     override fun work() {
-        println("Enter the operation code. 0 - exit, 1 - register new item")
-        val code = readLine()!!.toInt()
-        if (code == 0 || code != 1) {
-            return
+        val operationCodes = OperationCode.values()
+//        println("Enter the operation code. 0 - exit, 1 - register new item")
+//        val code = readLine()!!.toInt()
+//        if (code == 0 || code != 1) {
+//            return
+//        }
+        println("Enter the operation code: ")
+        while(doWork) {
+        for ((index, code) in operationCodes.withIndex()) {
+            print("$index - ${code.title}")
+            if (index < operationCodes.size - 1) {
+                print(", ")
+            } else {
+                println(": ")
+            }
         }
+            val operationIndex = readLine()!!.toInt()
+            val operationCode = operationCodes[operationIndex]
+            when (operationCode) {
+                OperationCode.EXIT -> {
+                    doWork = false
+                    break
+                }
+                OperationCode.REGISTER_NEW_ITEM -> registerNewItem()
+            }
+        }
+    }
 
+    fun registerNewItem() {
         println("Enter a product type: 0 - food, 1 - shoe, 2 - appliance")
         val itemCode = readLine()!!.toInt()
         var foodItem: FoodCard
@@ -55,7 +78,9 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             applianceItem.printInfo()
             return
         }
+        doWork = false
     }
+
 
     fun enterBasicInfo(): Array<Any> {
         println("Enter product name: ")
@@ -129,4 +154,69 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 //        }
 //        cardItem.printInfo()
 //    }
+
+        fun registerItemEnum() {
+            val ProductTypes = ProductType.values()
+//        println("Enter a product type: 0 - ${ProductTypes[0].title}, 1 - ${ProductTypes[1].title}, 2 - ${ProductTypes[2].title}")
+            println("Enter a product type: ")
+
+            for ((index, type) in ProductTypes.withIndex()) {
+                print("$index - ${type.title}")
+                if (index < ProductTypes.size - 1) {
+                    print(", ")
+                } else {
+                    println(": ")
+                }
+            }
+        val productTypeIndex = readLine()!!.toInt()
+            val productType = ProductTypes[productTypeIndex]
+
+        print("Enter product name: ")
+        val productName = readLine()!!.toString()
+
+        print("Enter product brand: ")
+        val productBrand = readLine()!!.toString()
+
+        print("Enter product price: ")
+        val productPrice = readLine()!!.toInt()
+
+        var cardItem = ProductCard("", "", 0)
+
+        when(productType) {
+            ProductType.FOOD ->  {
+                println("Enter food item calories: ")
+                val calories = readLine()!!.toInt()
+                cardItem = FoodCard(
+                    name = productName,
+                    brand = productBrand,
+                    price = productPrice,
+                    calories = calories
+                )
+            }
+            ProductType.APPLIANCE -> {
+                println("Enter the wattage: ")
+                val wattage = readLine()!!.toFloat()
+                cardItem = ApplianceCard(
+                    name = productName,
+                    brand = productBrand,
+                    price = productPrice,
+                    wattage = wattage
+                )
+            }
+            ProductType.SHOE -> {
+                println("Enter shoe item size: ")
+                val size = readLine()!!.toInt()
+                cardItem = ShoeCard(
+                    name = productName,
+                    brand = productBrand,
+                    price = productPrice,
+                    size = size
+                )
+            }
+            ProductType.MUSICAL_INSTRUMENTS -> {
+
+            }
+        }
+        cardItem.printInfo()
+    }
 }

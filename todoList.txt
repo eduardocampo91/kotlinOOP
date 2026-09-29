@@ -1,0 +1,7 @@
+sleep 
+eat 
+study 
+print files 
+stydu kotlin 
+present interviews 
+scrub toilet 

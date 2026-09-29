@@ -1,6 +1,8 @@
 package Corporation
 
 class Accountant(name: String, age: Int): Worker(name = name, age = age) {
+    val items = mutableListOf<ProductCard>()
+
     var doWork = true
     override fun work() {
         val operationCodes = OperationCode.values()
@@ -27,6 +29,10 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
                     break
                 }
                 OperationCode.REGISTER_NEW_ITEM -> registerNewItem()
+                OperationCode.SHOW_ALL_ITEMS -> {
+                    showAllItems()
+                    doWork = false
+                }
             }
         }
     }
@@ -46,6 +52,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
             foodItem = FoodCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), calories)
             foodItem.printInfo()
+            items.add(foodItem)
             return
         }
 
@@ -61,6 +68,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
             shoeItem = ShoeCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), size)
             shoeItem.printInfo()
+            items.add(shoeItem)
             return
         }
 
@@ -76,6 +84,8 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
             applianceItem = ApplianceCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), wattage)
             applianceItem.printInfo()
+            items.add(applianceItem)
+
             return
         }
         doWork = false
@@ -91,6 +101,12 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
         val price = readLine()!!.toInt()
 
         return arrayOf<Any>(name, brand, price)
+    }
+
+    fun showAllItems () {
+        for (item in items) {
+            item.printInfo()
+        }
     }
 
     // teach solution

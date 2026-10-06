@@ -1,7 +1,10 @@
 package Corporation
 
+import java.io.File
+
 class Accountant(name: String, age: Int): Worker(name = name, age = age) {
     val items = mutableListOf<ProductCard>()
+    val file = File("product_cards.txt")
 
     var doWork = true
     override fun work() {
@@ -28,7 +31,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
                     doWork = false
                     break
                 }
-                OperationCode.REGISTER_NEW_ITEM -> registerNewItem()
+                OperationCode.REGISTER_NEW_ITEM -> registerItemEnum()
                 OperationCode.SHOW_ALL_ITEMS -> {
                     showAllItems()
                     doWork = false
@@ -38,17 +41,22 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
     }
 
     fun registerNewItem() {
+        val ProductTypes = ProductType.values()
+        var productType = ProductTypes[0]
+
         println("Enter a product type: 0 - food, 1 - shoe, 2 - appliance")
         val itemCode = readLine()!!.toInt()
         var foodItem: FoodCard
         if (itemCode == 0) {
             //food
+            productType = ProductTypes[itemCode]
 
             println("Enter food item information: ")
 
             val basicInfo = enterBasicInfo()
             println("Enter product calories : ")
             val calories = readLine()!!.toInt()
+            file.appendText("$calories%")
 
             foodItem = FoodCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), calories)
             foodItem.printInfo()
@@ -59,12 +67,14 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
         var shoeItem: ShoeCard
         if (itemCode == 1) {
             //shoe
+            productType = ProductTypes[itemCode]
 
             println("Enter shoe item information: ")
 
             val basicInfo = enterBasicInfo()
             println("Enter product size : ")
             val size = readLine()!!.toInt()
+            file.appendText("$size%")
 
             shoeItem = ShoeCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), size)
             shoeItem.printInfo()
@@ -75,12 +85,14 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
         var applianceItem: ApplianceCard
         if (itemCode == 2) {
             //appliance
+            productType = ProductTypes[itemCode]
 
             println("Enter appliance item information: ")
 
             val basicInfo = enterBasicInfo()
             println("Enter product wattage : ")
             val wattage = readLine()!!.toFloat()
+            file.appendText("$wattage%")
 
             applianceItem = ApplianceCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), wattage)
             applianceItem.printInfo()
@@ -88,6 +100,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
             return
         }
+        file.appendText("$productType \n")
         doWork = false
     }
 
@@ -95,17 +108,43 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
     fun enterBasicInfo(): Array<Any> {
         println("Enter product name: ")
         val name = readLine()!!.toString()
+        file.appendText("$name%")
         println("Enter product Brand: ")
         val brand = readLine()!!.toString()
+        file.appendText("$brand%")
         println("Enter product Price : ")
         val price = readLine()!!.toInt()
+        file.appendText("$price%")
 
         return arrayOf<Any>(name, brand, price)
     }
 
     fun showAllItems () {
-        for (item in items) {
-            item.printInfo()
+        val valuesText = file.readText().trim()
+        val itemAsStringCard = valuesText.split("\n")
+        for (item in itemAsStringCard) {
+            val properties = item.split("%")
+            val name = properties[0]
+            val brand = properties[1]
+            val price = properties[2].toInt()
+            val type = properties.last().trim()
+            val productType = ProductType.valueOf(type)
+            val productCard = when(productType) {
+                ProductType.FOOD -> {
+                    val caloric = properties[3].toInt()
+                    FoodCard(name,brand, price, caloric)
+                }
+                ProductType.APPLIANCE -> {
+                    val wattage = properties[3].toFloat()
+                    ApplianceCard(name,brand, price, wattage)
+                }
+                ProductType.SHOE -> {
+                    val size = properties[3].toInt()
+                    ShoeCard(name,brand, price, size)
+                }
+                ProductType.MUSICAL_INSTRUMENTS -> TODO()
+            }
+            productCard.printInfo()
         }
     }
 
@@ -189,12 +228,15 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
         print("Enter product name: ")
         val productName = readLine()!!.toString()
+            file.appendText("$productName%")
 
         print("Enter product brand: ")
         val productBrand = readLine()!!.toString()
+            file.appendText("$productBrand%")
 
         print("Enter product price: ")
         val productPrice = readLine()!!.toInt()
+            file.appendText("$productPrice%")
 
         var cardItem = ProductCard("", "", 0)
 
@@ -202,6 +244,8 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             ProductType.FOOD ->  {
                 println("Enter food item calories: ")
                 val calories = readLine()!!.toInt()
+                file.appendText("$calories%")
+
                 cardItem = FoodCard(
                     name = productName,
                     brand = productBrand,
@@ -212,6 +256,8 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             ProductType.APPLIANCE -> {
                 println("Enter the wattage: ")
                 val wattage = readLine()!!.toFloat()
+                file.appendText("$wattage%")
+
                 cardItem = ApplianceCard(
                     name = productName,
                     brand = productBrand,
@@ -222,6 +268,8 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             ProductType.SHOE -> {
                 println("Enter shoe item size: ")
                 val size = readLine()!!.toInt()
+                file.appendText("$size%")
+
                 cardItem = ShoeCard(
                     name = productName,
                     brand = productBrand,
@@ -233,6 +281,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
             }
         }
-        cardItem.printInfo()
+            file.appendText("$productType \n")
+            cardItem.printInfo()
     }
 }

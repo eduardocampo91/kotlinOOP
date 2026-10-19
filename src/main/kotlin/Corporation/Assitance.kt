@@ -1,6 +1,7 @@
+import Corporation.Position
 import Corporation.Worker
 
-class Assistance(name: String, age: Int = 0): Worker(name = name, age = age) {
+class Assistance(id: Int, name: String, age: Int = 0): Worker(id = id, name = name, age = age, position = Position.ASSISTANT) {
     fun bringCoffee(count: Int = 1, typeCoffee: String = "espresso"): String {
         println("Get up")
         println("Go to coffee machine")

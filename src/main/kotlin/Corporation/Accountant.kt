@@ -1,10 +1,12 @@
 package Corporation
 
+import Assistance
 import java.io.File
 
-class Accountant(name: String, age: Int): Worker(name = name, age = age) {
+class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, age = age, position = Position.ACCOUNTANT) {
     val items = mutableListOf<ProductCard>()
-    val file = File("product_cards.txt")
+    val fileProducts = File("product_cards.txt")
+    val fileWorkers = File("workers.txt")
 
     var doWork = true
     override fun work() {
@@ -37,8 +39,94 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
                     doWork = false
                 }
                 OperationCode.REMOVE_PRODUCT_CARD -> removeProductCard()
+                OperationCode.REGISTER_NEW_EMPLOYEE -> registerEmployee()
+                OperationCode.FIRE_EMPLOYEE -> fireEmployee()
+                OperationCode.SHOW_ALL_EMPLOYEES -> showAllEmployees()
             }
         }
+    }
+
+    fun registerEmployee() {
+        val positions = Position.values()
+        println("Chose position - ")
+        for ((index, position) in positions.withIndex()) {
+            println("$index - ${position.title}")
+            if (index < positions.size - 1) {
+                print(", ")
+            } else {
+                print(": ")
+            }
+        }
+        val positionIndex = readLine()!!.toInt()
+        val position =positions[positionIndex]
+
+        println("Enter id: ")
+        val id = readLine()!!.toInt()
+
+        println("Enter name: ")
+        val name = readLine()!!.toString()
+
+        println("Enter age: ")
+        val age = readLine()!!.toInt()
+
+        val worker = when(position) {
+            Position.DIRECTOR -> Director(id, name, age)
+            Position.ACCOUNTANT -> Accountant(id, name, age)
+            Position.ASSISTANT -> Assistance(id, name, age)
+            Position.CONSULTANT -> Consultant(id, name, age)
+        }
+        saveWorkerToFile(worker)
+    }
+
+    fun fireEmployee() {
+        println("Enter id of employee to fire: ")
+        val id = readLine()!!.toInt()
+        val employees = loadAllEmployees()
+        fileWorkers.writeText("")
+        for (employee in employees) {
+            if(employee.id != id) {
+                saveWorkerToFile(employee)
+            }
+        }
+    }
+
+    fun showAllEmployees() {
+        val employees = loadAllEmployees()
+        for (employee in employees) {
+            employee.printWorker()
+        }
+    }
+
+    fun loadAllEmployees(): MutableList<Worker>{
+        val employees = mutableListOf<Worker>()
+
+        if (!fileWorkers.exists()) fileWorkers.createNewFile()
+
+        val content = fileWorkers.readText().trim()
+
+        if (content.isEmpty()) return employees
+
+        val employeesAsText = content.split("\n")
+        for(employee in employeesAsText) {
+            val properties = employee.split("%")
+            val id = properties[0].toInt()
+            val name = properties[1]
+            val age = properties[2].toInt()
+            val positionAsText = properties.last()
+            val position = Position.valueOf(positionAsText)
+            val worker = when(position) {
+                Position.DIRECTOR -> Director(id, name, age)
+                Position.ACCOUNTANT -> Accountant(id, name, age)
+                Position.ASSISTANT -> Assistance(id, name, age)
+                Position.CONSULTANT -> Consultant(id, name, age)
+            }
+            employees.add(worker)
+        }
+        return employees
+    }
+
+    fun saveWorkerToFile(worker: Worker) {
+        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.position}\n")
     }
 
     fun registerNewItem() {
@@ -57,7 +145,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             val basicInfo = enterBasicInfo()
             println("Enter product calories : ")
             val calories = readLine()!!.toInt()
-            file.appendText("$calories%")
+            fileProducts.appendText("$calories%")
 
             foodItem = FoodCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), calories)
             foodItem.printInfo()
@@ -75,7 +163,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             val basicInfo = enterBasicInfo()
             println("Enter product size : ")
             val size = readLine()!!.toInt()
-            file.appendText("$size%")
+            fileProducts.appendText("$size%")
 
             shoeItem = ShoeCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), size)
             shoeItem.printInfo()
@@ -93,7 +181,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
             val basicInfo = enterBasicInfo()
             println("Enter product wattage : ")
             val wattage = readLine()!!.toFloat()
-            file.appendText("$wattage%")
+            fileProducts.appendText("$wattage%")
 
             applianceItem = ApplianceCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), wattage)
             applianceItem.printInfo()
@@ -101,7 +189,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
 
             return
         }
-        file.appendText("$productType \n")
+        fileProducts.appendText("$productType \n")
         doWork = false
     }
 
@@ -109,13 +197,13 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
     fun enterBasicInfo(): Array<Any> {
         println("Enter product name: ")
         val name = readLine()!!.toString()
-        file.appendText("$name%")
+        fileProducts.appendText("$name%")
         println("Enter product Brand: ")
         val brand = readLine()!!.toString()
-        file.appendText("$brand%")
+        fileProducts.appendText("$brand%")
         println("Enter product Price : ")
         val price = readLine()!!.toInt()
-        file.appendText("$price%")
+        fileProducts.appendText("$price%")
 
         return arrayOf<Any>(name, brand, price)
     }
@@ -264,7 +352,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
                 break
             }
         }
-        file.writeText("")
+        fileProducts.writeText("")
         for (card in cards) {
             saveProductCardToFile(card)
         }
@@ -273,7 +361,7 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
     fun loadAllCards(): MutableList<ProductCard> {
         val cards = mutableListOf<ProductCard>()
 
-        val valuesText = file.readText().trim()
+        val valuesText = fileProducts.readText().trim()
         if (valuesText.isEmpty()) {
             return cards
         }
@@ -308,23 +396,23 @@ class Accountant(name: String, age: Int): Worker(name = name, age = age) {
     }
 
     fun saveProductCardToFile(productCard: ProductCard) {
-        file.appendText("${productCard.name}%")
-        file.appendText("${productCard.brand}%")
-        file.appendText("${productCard.price}%")
+        fileProducts.appendText("${productCard.name}%")
+        fileProducts.appendText("${productCard.brand}%")
+        fileProducts.appendText("${productCard.price}%")
         when (productCard) {
             is FoodCard -> {
                 val calories = productCard.calories
-                file.appendText("$calories%")
+                fileProducts.appendText("$calories%")
             }
             is ShoeCard -> {
                 val size = productCard.size
-                file.appendText("$size%")
+                fileProducts.appendText("$size%")
             }
             is ApplianceCard -> {
                 val wattage = productCard.wattage
-                file.appendText("$wattage%")
+                fileProducts.appendText("$wattage%")
             }
         }
-        file.appendText("${productCard.productType}\n")
+        fileProducts.appendText("${productCard.productType}\n")
     }
 }

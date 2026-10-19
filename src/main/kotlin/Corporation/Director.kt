@@ -2,7 +2,7 @@ package Corporation
 
 import Assistance
 
-class Director(name: String, age: Int): Worker(name = name, age =age) {
+class Director(id: Int, name: String, age: Int): Worker(id = id, name = name, age =age, position = Position.DIRECTOR) {
     fun takeCoffee(assistant: Assistance, drinkName: String = ""){
         if (drinkName == "") {
             assistant.bringCoffee()

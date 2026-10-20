@@ -2,7 +2,7 @@ package Corporation
 
 import kotlin.random.Random
 
-class Consultant(id: Int, name: String, age: Int = 0): Worker(id = id, name = name, age = age,position = Position.CONSULTANT) {
+class Consultant(id: Int, name: String, age: Int = 0): Worker(id = id, name = name, age = age,position = Position.CONSULTANT), Cleaner {
 
     fun sayHello(){
         if (name !== "" && age == 0) {
@@ -22,6 +22,10 @@ class Consultant(id: Int, name: String, age: Int = 0): Worker(id = id, name = na
 
     override fun work() {
         serveCustomers()
+    }
+
+    override fun clean() {
+        println("I clean")
     }
 
 }

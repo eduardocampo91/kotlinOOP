@@ -2,7 +2,7 @@ package Corporation
 
 import Assistance
 
-class Director(id: Int, name: String, age: Int): Worker(id = id, name = name, age =age, position = Position.DIRECTOR) {
+class Director(id: Int, name: String, age: Int): Worker(id = id, name = name, age =age, position = Position.DIRECTOR), Supplier {
     fun takeCoffee(assistant: Assistance, drinkName: String = ""){
         if (drinkName == "") {
             assistant.bringCoffee()
@@ -22,5 +22,9 @@ class Director(id: Int, name: String, age: Int): Worker(id = id, name = name, ag
 
     override fun work() {
         println("I drink coffee")
+    }
+
+    override fun buyThings() {
+        println("Im buying director things")
     }
 }

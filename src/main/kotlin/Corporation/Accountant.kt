@@ -3,12 +3,20 @@ package Corporation
 import Assistance
 import java.io.File
 
-class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, age = age, position = Position.ACCOUNTANT) {
+class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, age = age, position = Position.ACCOUNTANT), Cleaner, Supplier {
     val items = mutableListOf<ProductCard>()
     private val fileProducts = File("product_cards.txt")
     private val fileWorkers = File("workers.txt")
 
     var doWork = true
+
+    override fun clean() {
+        println("Im cleaning my desk")
+    }
+
+    override fun buyThings() {
+        println("Im buying accountant things")
+    }
     override fun work() {
         val operationCodes = OperationCode.values()
 //        println("Enter the operation code. 0 - exit, 1 - register new item")
@@ -97,7 +105,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         }
     }
 
-    private fun loadAllEmployees(): MutableList<Worker>{
+    fun loadAllEmployees(): MutableList<Worker>{
         val employees = mutableListOf<Worker>()
 
         if (!fileWorkers.exists()) fileWorkers.createNewFile()

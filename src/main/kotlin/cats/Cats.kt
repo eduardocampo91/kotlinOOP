@@ -5,4 +5,7 @@ class Cats(val name: String): CatsFamily() {
         println("Playing with mouse!")
     }
 
+    override fun eat() {
+        println("I eat tuna")
+    }
 }

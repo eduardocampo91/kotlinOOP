@@ -5,8 +5,8 @@ import java.io.File
 
 class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, age = age, position = Position.ACCOUNTANT) {
     val items = mutableListOf<ProductCard>()
-    val fileProducts = File("product_cards.txt")
-    val fileWorkers = File("workers.txt")
+    private val fileProducts = File("product_cards.txt")
+    private val fileWorkers = File("workers.txt")
 
     var doWork = true
     override fun work() {
@@ -46,7 +46,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         }
     }
 
-    fun registerEmployee() {
+    private fun registerEmployee() {
         val positions = Position.values()
         println("Chose position - ")
         for ((index, position) in positions.withIndex()) {
@@ -78,7 +78,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         saveWorkerToFile(worker)
     }
 
-    fun fireEmployee() {
+    private fun fireEmployee() {
         println("Enter id of employee to fire: ")
         val id = readLine()!!.toInt()
         val employees = loadAllEmployees()
@@ -90,14 +90,14 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         }
     }
 
-    fun showAllEmployees() {
+    private fun showAllEmployees() {
         val employees = loadAllEmployees()
         for (employee in employees) {
             employee.printWorker()
         }
     }
 
-    fun loadAllEmployees(): MutableList<Worker>{
+    private fun loadAllEmployees(): MutableList<Worker>{
         val employees = mutableListOf<Worker>()
 
         if (!fileWorkers.exists()) fileWorkers.createNewFile()
@@ -125,7 +125,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         return employees
     }
 
-    fun saveWorkerToFile(worker: Worker) {
+    private fun saveWorkerToFile(worker: Worker) {
         fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.position}\n")
     }
 
@@ -194,7 +194,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
     }
 
 
-    fun enterBasicInfo(): Array<Any> {
+    private fun enterBasicInfo(): Array<Any> {
         println("Enter product name: ")
         val name = readLine()!!.toString()
         fileProducts.appendText("$name%")
@@ -208,7 +208,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         return arrayOf<Any>(name, brand, price)
     }
 
-    fun showAllItems () {
+    private fun showAllItems () {
        val cards = loadAllCards()
 //        for (card in cards) {
 //            card.printInfo()
@@ -277,7 +277,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
 //        cardItem.printInfo()
 //    }
 
-        fun registerItemEnum() {
+        private fun registerItemEnum() {
             val ProductTypes = ProductType.values()
 //        println("Enter a product type: 0 - ${ProductTypes[0].title}, 1 - ${ProductTypes[1].title}, 2 - ${ProductTypes[2].title}")
             println("Enter a product type: ")
@@ -342,7 +342,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
             saveProductCardToFile(card as ProductCard)
     }
 
-    fun removeProductCard() {
+    private fun removeProductCard() {
         val cards = loadAllCards()
         println("Enter name of card for removing: ")
         val name = readLine()!!.toString()

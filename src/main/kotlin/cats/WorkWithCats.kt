@@ -9,4 +9,11 @@ fun main () {
     val lion = Lion(25)
     println(lion.countInPride)
 
+    cat.eat()
+    lion.eat()
+
+    val animals = listOf<CatsFamily>(cat, lion)
+    for (animal in animals) {
+        animal.eat()
+    }
 }

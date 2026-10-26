@@ -10,7 +10,8 @@ fun main() {
     val johnheight = readLine()!!.toInt()
     println("Input weight")
     val johnweight = readLine()!!.toInt()
-    val john: Person = Person(johnname, johnage, johnheight, johnweight)
+    val john: Person = Person(johnname, johnheight, johnweight)
+    john.age = johnage
     println("Name: ${john.name} \nAge: ${john.age} \nHeight: ${john.height} \nWeight: ${john.weight}")
 
 
@@ -23,7 +24,8 @@ fun main() {
     val Nickheight = readLine()!!.toInt()
     println("Input weight")
     val Nickweight = readLine()!!.toInt()
-    val Nick: Person = Person(Nickname, Nickage, Nickweight, Nickheight)
+    val Nick: Person = Person(Nickname, Nickweight, Nickheight)
+    Nick.age = Nickage
     println("Name: ${Nick.name} \nAge: ${Nick.age} \nHeight: ${Nick.height} \nWeight: ${Nick.weight}")
 
     john.sayHi()
@@ -34,7 +36,9 @@ fun main() {
 
 
     // using init and printinfo methods
-    val usagi: Person = Person("Usagi", 15, 175, 50)
+    val usagi: Person = Person("Usagi", 175, 50)
+    usagi.age = 15
+    usagi.age = 14
     // usagi.init("Usagi", 15, 175, 50)
     usagi.sayHi()
     usagi.printInfo()

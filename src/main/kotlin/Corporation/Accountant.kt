@@ -50,7 +50,23 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
                 OperationCode.REGISTER_NEW_EMPLOYEE -> registerEmployee()
                 OperationCode.FIRE_EMPLOYEE -> fireEmployee()
                 OperationCode.SHOW_ALL_EMPLOYEES -> showAllEmployees()
+                OperationCode.CHANGE_SALARY -> changeSalary()
             }
+        }
+    }
+
+    private fun changeSalary() {
+        println("Enter id of employee to change salary: ")
+        val id = readLine()!!.toInt()
+        println("Enter new salary: ")
+        val salary = readLine()!!.toInt()
+        val employees = loadAllEmployees()
+        fileWorkers.writeText("")
+        for (employee in employees) {
+            if(employee.id == id) {
+                employee.salary = salary
+            }
+            saveWorkerToFile(employee)
         }
     }
 
@@ -77,12 +93,16 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         println("Enter age: ")
         val age = readLine()!!.toInt()
 
+        println("Enter salary: ")
+        val salary = readLine()!!.toInt()
+
         val worker = when(position) {
             Position.DIRECTOR -> Director(id, name, age)
             Position.ACCOUNTANT -> Accountant(id, name, age)
             Position.ASSISTANT -> Assistance(id, name, age)
             Position.CONSULTANT -> Consultant(id, name, age)
         }
+        worker.salary = salary
         saveWorkerToFile(worker)
     }
 
@@ -120,6 +140,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
             val id = properties[0].toInt()
             val name = properties[1]
             val age = properties[2].toInt()
+            val salary = properties[3].toInt()
             val positionAsText = properties.last()
             val position = Position.valueOf(positionAsText)
             val worker = when(position) {
@@ -128,13 +149,14 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
                 Position.ASSISTANT -> Assistance(id, name, age)
                 Position.CONSULTANT -> Consultant(id, name, age)
             }
+            worker.salary = salary
             employees.add(worker)
         }
         return employees
     }
 
     private fun saveWorkerToFile(worker: Worker) {
-        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.position}\n")
+        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.salary}%${worker.position}\n")
     }
 
     fun registerNewItem() {

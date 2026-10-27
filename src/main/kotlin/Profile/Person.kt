@@ -1,15 +1,22 @@
 package Profile
 
-class Person {
-    val name: String
-    val height: Int
+class Person(
+    val name: String,
+    var lastName: String,
+    val height: Int,
     val weight: Int
+) {
+//
+//
+//    constructor(name: String, height: Int, weight: Int) {
+//        this.name =name
+//        this.height = height
+//        this.weight = weight
+//    }
 
-    constructor(name: String, height: Int, weight: Int) {
-        this.name =name
-        this.height = height
-        this.weight = weight
-    }
+    val fullName: String
+        get() = "$name $lastName"
+
      var age: Int = 0
         set(value) {
             if (value > field) {

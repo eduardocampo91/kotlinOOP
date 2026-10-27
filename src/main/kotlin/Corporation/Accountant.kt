@@ -16,8 +16,8 @@ class Accountant(id: Int,
 ), Cleaner, Supplier {
 
     val items = mutableListOf<ProductCard>()
-    private val fileProducts = File("product_cards.txt")
-    private val fileWorkers = File("workers.txt")
+    private val workersRepository = WorkersRepository()
+    private val productCardsRepository = ProductCardsRepository()
 
     var doWork = true
 
@@ -55,11 +55,10 @@ class Accountant(id: Int,
                 OperationCode.REGISTER_NEW_ITEM -> registerItemEnum()
                 OperationCode.SHOW_ALL_ITEMS -> {
                     showAllItems()
-                    doWork = false
                 }
                 OperationCode.REMOVE_PRODUCT_CARD -> removeProductCard()
                 OperationCode.REGISTER_NEW_EMPLOYEE -> registerEmployee()
-                OperationCode.FIRE_EMPLOYEE -> fireEmployee()
+                OperationCode.FIRE_EMPLOYEE -> fireEmployee(id)
                 OperationCode.SHOW_ALL_EMPLOYEES -> showAllEmployees()
                 OperationCode.CHANGE_SALARY -> changeSalary()
             }
@@ -71,14 +70,7 @@ class Accountant(id: Int,
         val id = readLine()!!.toInt()
         println("Enter new salary: ")
         val salary = readLine()!!.toInt()
-        val employees = loadAllEmployees()
-        fileWorkers.writeText("")
-        for (employee in employees) {
-            if(employee.id == id) {
-                employee.setSalary(salary)
-            }
-            saveWorkerToFile(employee)
-        }
+        workersRepository.changeSalary(id, salary)
     }
 
     private fun registerEmployee() {
@@ -114,143 +106,103 @@ class Accountant(id: Int,
             Position.CONSULTANT -> Consultant(id, name, age, salary)
         }
         //worker.setSalary(salary)
-        saveWorkerToFile(worker)
+        workersRepository.registerNewEmployee(worker)
     }
 
-    private fun fireEmployee() {
+    fun fireEmployee(id: Int) {
         println("Enter id of employee to fire: ")
         val id = readLine()!!.toInt()
-        val employees = loadAllEmployees()
-        fileWorkers.writeText("")
-        for (employee in employees) {
-            if(employee.id != id) {
-                saveWorkerToFile(employee)
-            }
-        }
+        workersRepository.fireEmployee(id)
     }
 
     private fun showAllEmployees() {
-        val employees = loadAllEmployees()
+        val employees = workersRepository.loadAllEmployees()
         for (employee in employees) {
             employee.printWorker()
         }
     }
 
-    fun loadAllEmployees(): MutableList<Worker>{
-        val employees = mutableListOf<Worker>()
-
-        if (!fileWorkers.exists()) fileWorkers.createNewFile()
-
-        val content = fileWorkers.readText().trim()
-
-        if (content.isEmpty()) return employees
-
-        val employeesAsText = content.split("\n")
-        for(employee in employeesAsText) {
-            val properties = employee.split("%")
-            val id = properties[0].toInt()
-            val name = properties[1]
-            val age = properties[2].toInt()
-            val salary = properties[3].toInt()
-            val positionAsText = properties.last()
-            val position = Position.valueOf(positionAsText)
-            val worker = when(position) {
-                Position.DIRECTOR -> Director(id, name, age, salary)
-                Position.ACCOUNTANT -> Accountant(id, name, age, salary)
-                Position.ASSISTANT -> Assistance(id, name, age, salary)
-                Position.CONSULTANT -> Consultant(id, name, age, salary)
-            }
-            // worker.setSalary(salary)
-            employees.add(worker)
-        }
-        return employees
-    }
-
-    private fun saveWorkerToFile(worker: Worker) {
-        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.getSalary()}%${worker.position}\n")
-    }
-
-    fun registerNewItem() {
-        val ProductTypes = ProductType.values()
-        var productType = ProductTypes[0]
-
-        println("Enter a product type: 0 - food, 1 - shoe, 2 - appliance")
-        val itemCode = readLine()!!.toInt()
-        var foodItem: FoodCard
-        if (itemCode == 0) {
-            //food
-            productType = ProductTypes[itemCode]
-
-            println("Enter food item information: ")
-
-            val basicInfo = enterBasicInfo()
-            println("Enter product calories : ")
-            val calories = readLine()!!.toInt()
-            fileProducts.appendText("$calories%")
-
-            foodItem = FoodCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), calories)
-            foodItem.printInfo()
-            items.add(foodItem)
-            return
-        }
-
-        var shoeItem: ShoeCard
-        if (itemCode == 1) {
-            //shoe
-            productType = ProductTypes[itemCode]
-
-            println("Enter shoe item information: ")
-
-            val basicInfo = enterBasicInfo()
-            println("Enter product size : ")
-            val size = readLine()!!.toInt()
-            fileProducts.appendText("$size%")
-
-            shoeItem = ShoeCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), size)
-            shoeItem.printInfo()
-            items.add(shoeItem)
-            return
-        }
-
-        var applianceItem: ApplianceCard
-        if (itemCode == 2) {
-            //appliance
-            productType = ProductTypes[itemCode]
-
-            println("Enter appliance item information: ")
-
-            val basicInfo = enterBasicInfo()
-            println("Enter product wattage : ")
-            val wattage = readLine()!!.toFloat()
-            fileProducts.appendText("$wattage%")
-
-            applianceItem = ApplianceCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), wattage)
-            applianceItem.printInfo()
-            items.add(applianceItem)
-
-            return
-        }
-        fileProducts.appendText("$productType \n")
-        doWork = false
-    }
+//    fun registerNewItem() {
+//        val ProductTypes = ProductType.values()
+//        var productType = ProductTypes[0]
+//
+//        println("Enter a product type: 0 - food, 1 - shoe, 2 - appliance")
+//        val itemCode = readLine()!!.toInt()
+//        var foodItem: FoodCard
+//        if (itemCode == 0) {
+//            //food
+//            productType = ProductTypes[itemCode]
+//
+//            println("Enter food item information: ")
+//
+//            val basicInfo = enterBasicInfo()
+//            println("Enter product calories : ")
+//            val calories = readLine()!!.toInt()
+//            fileProducts.appendText("$calories%")
+//
+//            foodItem = FoodCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), calories)
+//            foodItem.printInfo()
+//            items.add(foodItem)
+//            return
+//        }
+//
+//        var shoeItem: ShoeCard
+//        if (itemCode == 1) {
+//            //shoe
+//            productType = ProductTypes[itemCode]
+//
+//            println("Enter shoe item information: ")
+//
+//            val basicInfo = enterBasicInfo()
+//            println("Enter product size : ")
+//            val size = readLine()!!.toInt()
+//            fileProducts.appendText("$size%")
+//
+//            shoeItem = ShoeCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), size)
+//            shoeItem.printInfo()
+//            items.add(shoeItem)
+//            return
+//        }
+//
+//        var applianceItem: ApplianceCard
+//        if (itemCode == 2) {
+//            //appliance
+//            productType = ProductTypes[itemCode]
+//
+//            println("Enter appliance item information: ")
+//
+//            val basicInfo = enterBasicInfo()
+//            println("Enter product wattage : ")
+//            val wattage = readLine()!!.toFloat()
+//            fileProducts.appendText("$wattage%")
+//
+//            applianceItem = ApplianceCard(name = (basicInfo[0] as String), brand = (basicInfo[1] as String), price = (basicInfo[2] as Int), wattage)
+//            applianceItem.printInfo()
+//            items.add(applianceItem)
+//
+//            return
+//        }
+//        fileProducts.appendText("$productType \n")
+//        doWork = false
+//    }
 
 
-    private fun enterBasicInfo(): Array<Any> {
-        println("Enter product name: ")
-        val name = readLine()!!.toString()
-        fileProducts.appendText("$name%")
-        println("Enter product Brand: ")
-        val brand = readLine()!!.toString()
-        fileProducts.appendText("$brand%")
-        println("Enter product Price : ")
-        val price = readLine()!!.toInt()
-        fileProducts.appendText("$price%")
-
-        return arrayOf<Any>(name, brand, price)
-    }
+//    private fun enterBasicInfo(): Array<Any> {
+//        println("Enter product name: ")
+//        val name = readLine()!!.toString()
+//        fileProducts.appendText("$name%")
+//        println("Enter product Brand: ")
+//        val brand = readLine()!!.toString()
+//        fileProducts.appendText("$brand%")
+//        println("Enter product Price : ")
+//        val price = readLine()!!.toInt()
+//        fileProducts.appendText("$price%")
+//
+//        return arrayOf<Any>(name, brand, price)
+//    }
 
     private fun showAllItems () {
-       val cards = loadAllCards()
+       val cards = productCardsRepository.loadAllCards()
 //        for (card in cards) {
 //            card.printInfo()
 //        }
@@ -380,80 +332,12 @@ class Accountant(id: Int,
 
             }
         }
-            saveProductCardToFile(card as ProductCard)
+            productCardsRepository.registerItemEnum(card as ProductCard)
     }
 
     private fun removeProductCard() {
-        val cards = loadAllCards()
         println("Enter name of card for removing: ")
         val name = readLine()!!.toString()
-        for ((index, card) in cards.withIndex()) {
-            if (card.name == name) {
-                cards.removeAt(index)
-                break
-            }
-        }
-        fileProducts.writeText("")
-        for (card in cards) {
-            saveProductCardToFile(card)
-        }
-    }
-
-    fun loadAllCards(): MutableList<ProductCard> {
-        val cards = mutableListOf<ProductCard>()
-
-        val valuesText = fileProducts.readText().trim()
-        if (valuesText.isEmpty()) {
-            return cards
-        }
-
-        val itemAsStringCard = valuesText.split("\n")
-        for (item in itemAsStringCard) {
-            val properties = item.split("%")
-            val name = properties[0]
-            val brand = properties[1]
-            val price = properties[2].toInt()
-            val type = properties.last().trim()
-            val productType = ProductType.valueOf(type)
-            val productCard = when (productType) {
-                ProductType.FOOD -> {
-                    val caloric = properties[3].toInt()
-                    FoodCard(name, brand, price, caloric)
-                }
-                ProductType.APPLIANCE -> {
-                    val wattage = properties[3].toFloat()
-                    ApplianceCard(name, brand, price, wattage)
-                }
-                ProductType.SHOE -> {
-                    val size = properties[3].toInt()
-                    ShoeCard(name, brand, price, size)
-                }
-                ProductType.MUSICAL_INSTRUMENTS -> TODO()
-            }
-            productCard.printInfo()
-            cards.add(productCard)
-        }
-        return cards
-    }
-
-    fun saveProductCardToFile(productCard: ProductCard) {
-        fileProducts.appendText("${productCard.name}%")
-        fileProducts.appendText("${productCard.brand}%")
-        fileProducts.appendText("${productCard.price}%")
-        when (productCard) {
-            is FoodCard -> {
-                val calories = productCard.calories
-                fileProducts.appendText("$calories%")
-            }
-            is ShoeCard -> {
-                val size = productCard.size
-                fileProducts.appendText("$size%")
-            }
-            is ApplianceCard -> {
-                val wattage = productCard.wattage
-                fileProducts.appendText("$wattage%")
-            }
-        }
-        fileProducts.appendText("${productCard.productType}\n")
+        productCardsRepository.removeProductCard(name)
     }
 }

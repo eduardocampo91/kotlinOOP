@@ -3,7 +3,18 @@ package Corporation
 import Assistance
 import java.io.File
 
-class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, age = age, position = Position.ACCOUNTANT), Cleaner, Supplier {
+class Accountant(id: Int,
+                 name: String,
+                 age: Int,
+                 salary: Int
+): Worker(
+    id = id,
+    name = name,
+    age = age,
+    salary = salary,
+    position = Position.ACCOUNTANT
+), Cleaner, Supplier {
+
     val items = mutableListOf<ProductCard>()
     private val fileProducts = File("product_cards.txt")
     private val fileWorkers = File("workers.txt")
@@ -64,7 +75,7 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         fileWorkers.writeText("")
         for (employee in employees) {
             if(employee.id == id) {
-                employee.salary = salary
+                employee.setSalary(salary)
             }
             saveWorkerToFile(employee)
         }
@@ -97,12 +108,12 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
         val salary = readLine()!!.toInt()
 
         val worker = when(position) {
-            Position.DIRECTOR -> Director(id, name, age)
-            Position.ACCOUNTANT -> Accountant(id, name, age)
-            Position.ASSISTANT -> Assistance(id, name, age)
-            Position.CONSULTANT -> Consultant(id, name, age)
+            Position.DIRECTOR -> Director(id, name, age, salary)
+            Position.ACCOUNTANT -> Accountant(id, name, age, salary)
+            Position.ASSISTANT -> Assistance(id, name, age, salary)
+            Position.CONSULTANT -> Consultant(id, name, age, salary)
         }
-        worker.salary = salary
+        //worker.setSalary(salary)
         saveWorkerToFile(worker)
     }
 
@@ -144,19 +155,19 @@ class Accountant(id: Int, name: String, age: Int): Worker(id = id, name = name, 
             val positionAsText = properties.last()
             val position = Position.valueOf(positionAsText)
             val worker = when(position) {
-                Position.DIRECTOR -> Director(id, name, age)
-                Position.ACCOUNTANT -> Accountant(id, name, age)
-                Position.ASSISTANT -> Assistance(id, name, age)
-                Position.CONSULTANT -> Consultant(id, name, age)
+                Position.DIRECTOR -> Director(id, name, age, salary)
+                Position.ACCOUNTANT -> Accountant(id, name, age, salary)
+                Position.ASSISTANT -> Assistance(id, name, age, salary)
+                Position.CONSULTANT -> Consultant(id, name, age, salary)
             }
-            worker.salary = salary
+            // worker.setSalary(salary)
             employees.add(worker)
         }
         return employees
     }
 
     private fun saveWorkerToFile(worker: Worker) {
-        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.salary}%${worker.position}\n")
+        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.getSalary()}%${worker.position}\n")
     }
 
     fun registerNewItem() {

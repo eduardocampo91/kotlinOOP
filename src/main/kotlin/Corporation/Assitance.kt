@@ -3,7 +3,13 @@ import Corporation.Position
 import Corporation.Supplier
 import Corporation.Worker
 
-class Assistance(id: Int, name: String, age: Int = 0): Worker(id = id, name = name, age = age, position = Position.ASSISTANT),
+class Assistance(id: Int, name: String, age: Int = 0, salary: Int): Worker(
+    id = id,
+    name = name,
+    age = age,
+    salary = salary,
+    position = Position.ASSISTANT
+),
     Cleaner, Supplier {
     fun bringCoffee(count: Int = 1, typeCoffee: String = "espresso"): String {
         println("Get up")

@@ -1,4 +1,4 @@
-class Rectangle(val width: Int = 0, val height: Int = 0) {
+class Rectangle(var width: Int = 0, var height: Int = 0) {
 //    val width: Int
 //    val height: Int
 
@@ -8,6 +8,9 @@ class Rectangle(val width: Int = 0, val height: Int = 0) {
 //        this.width = width
 //        this.height = height
 //    }
+
+    val area: Int
+        get() = width * height
 
     constructor(size: Int): this(size, size)
 

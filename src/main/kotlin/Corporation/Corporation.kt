@@ -35,12 +35,12 @@ fun main() {
     product2.printInfo()
 
     println("///////////////////////////////")
-    val director: Worker = Director(1, "Bob", 50)
-    val consultant: Worker = Consultant(2, "Rachel", 26)
+    val director: Worker = Director(1, "Bob", 50, 446654)
+    val consultant: Worker = Consultant(2, "Rachel", 26, 446654)
 
     // upcasting when an object or an instance of any class is stored in a variable of its parent type, it can
     // access the parent properties and methods but not its own
-    val assistant: Worker = Assistance(3, "Ken", 154)
+    val assistant: Worker = Assistance(3, "Ken", 154, 446654)
     // assistant.bringCoffee()
 
     // downcasting is when an instance of a class is cast back to the child type
@@ -49,9 +49,9 @@ fun main() {
     (director as Director).getConsultantToWork(consultant as Consultant)
 
     // polymorphism
-    val director2: Director = Director(4, "Gil", 25)
-    val consultant2: Consultant = Consultant(5,"Bil", 25)
-    val assitant2: Assistance = Assistance(6, "Phil", 25)
+    val director2: Director = Director(4, "Gil", 25, 446654)
+    val consultant2: Consultant = Consultant(5,"Bil", 25, 446654)
+    val assitant2: Assistance = Assistance(6, "Phil", 25, 446654)
 
     val employees = listOf<Worker>(director2, consultant2, assitant2)
 //
@@ -66,7 +66,7 @@ fun main() {
     val shoeCard = ShoeCard("sneakers", "nike", 39, 3000)
     shoeCard.printInfo()
 
-    val accountant = Accountant(7, "Rick", 56)
+    val accountant = Accountant(7, "Rick", 56, 446654)
     accountant.work()
     //accountant.registerItemEnum()
 }

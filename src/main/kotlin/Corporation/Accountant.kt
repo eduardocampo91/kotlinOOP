@@ -17,7 +17,7 @@ class Accountant(id: Int,
 
     val items = mutableListOf<ProductCard>()
     private val workersRepository = WorkersRepository
-    private val productCardsRepository = ProductCardsRepository()
+    private val productCardsRepository = ProductCardsRepository
 
     var doWork = true
 

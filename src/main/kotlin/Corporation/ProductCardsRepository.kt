@@ -3,7 +3,7 @@ package Corporation
 import java.io.File
 import java.lang.StringBuilder
 
-class ProductCardsRepository {
+object ProductCardsRepository {
     private val fileProducts = File("product_cards.txt")
     val productCards = loadAllCards()
 

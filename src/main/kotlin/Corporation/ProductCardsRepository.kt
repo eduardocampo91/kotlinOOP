@@ -1,36 +1,17 @@
 package Corporation
 
 import java.io.File
+import java.lang.StringBuilder
 
 class ProductCardsRepository {
     private val fileProducts = File("product_cards.txt")
+    val productCards = loadAllCards()
 
     fun registerItemEnum(productCard: ProductCard) {
-        saveProductCardToFile(productCard)
+        productCards.add(productCard)
     }
 
-    private fun saveProductCardToFile(productCard: ProductCard) {
-        fileProducts.appendText("${productCard.name}%")
-        fileProducts.appendText("${productCard.brand}%")
-        fileProducts.appendText("${productCard.price}%")
-        when (productCard) {
-            is FoodCard -> {
-                val calories = productCard.calories
-                fileProducts.appendText("$calories%")
-            }
-            is ShoeCard -> {
-                val size = productCard.size
-                fileProducts.appendText("$size%")
-            }
-            is ApplianceCard -> {
-                val wattage = productCard.wattage
-                fileProducts.appendText("$wattage%")
-            }
-        }
-        fileProducts.appendText("${productCard.productType}\n")
-    }
-
-    fun loadAllCards(): MutableList<ProductCard> {
+    private fun loadAllCards(): MutableList<ProductCard> {
         val cards = mutableListOf<ProductCard>()
 
         val valuesText = fileProducts.readText().trim()
@@ -67,18 +48,41 @@ class ProductCardsRepository {
         return cards
     }
 
-    fun removeProductCard(name: String) {
-        val cards = loadAllCards()
+    fun savingData() {
+        val content = StringBuilder()
+        for (productCard in productCards) {
+            content.append("${productCard.name}%")
+            content.append("${productCard.brand}%")
+            content.append("${productCard.price}%")
+            when (productCard) {
+                is FoodCard -> {
+                    val calories = productCard.calories
+                    content.append("$calories%")
+                }
+                is ShoeCard -> {
+                    val size = productCard.size
+                    content.append("$size%")
+                }
+                is ApplianceCard -> {
+                    val wattage = productCard.wattage
+                    content.append("$wattage%")
+                }
+            }
+            content.append("${productCard.productType}\n")
+        }
+        fileProducts.writeText(content.toString())
+    }
 
-        for ((index, card) in cards.withIndex()) {
+    fun removeProductCard(name: String) {
+        for ((index, card) in productCards.withIndex()) {
             if (card.name == name) {
-                cards.removeAt(index)
+                productCards.removeAt(index)
                 break
             }
         }
         fileProducts.writeText("")
-        for (card in cards) {
-            saveProductCardToFile(card)
-        }
+//        for (card in productCards) {
+//            saveProductCardToFile(card)
+//        }
     }
 }

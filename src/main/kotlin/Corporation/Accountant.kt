@@ -16,7 +16,7 @@ class Accountant(id: Int,
 ), Cleaner, Supplier {
 
     val items = mutableListOf<ProductCard>()
-    private val workersRepository = WorkersRepository()
+    private val workersRepository = WorkersRepository
     private val productCardsRepository = ProductCardsRepository()
 
     var doWork = true
@@ -49,6 +49,8 @@ class Accountant(id: Int,
             val operationCode = operationCodes[operationIndex]
             when (operationCode) {
                 OperationCode.EXIT -> {
+                    workersRepository.saveChanges()
+                    productCardsRepository.savingData()
                     doWork = false
                     break
                 }
@@ -116,7 +118,7 @@ class Accountant(id: Int,
     }
 
     private fun showAllEmployees() {
-        val employees = workersRepository.loadAllEmployees()
+        val employees = workersRepository.employees
         for (employee in employees) {
             employee.printWorker()
         }
@@ -202,10 +204,10 @@ class Accountant(id: Int,
 //    }
 
     private fun showAllItems () {
-       val cards = productCardsRepository.loadAllCards()
-//        for (card in cards) {
-//            card.printInfo()
-//        }
+       val cards = productCardsRepository.productCards
+        for (card in cards) {
+            card.printInfo()
+        }
     }
 
     // teach solution

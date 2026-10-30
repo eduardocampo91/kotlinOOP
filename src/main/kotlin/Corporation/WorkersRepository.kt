@@ -2,19 +2,21 @@ package Corporation
 
 import Assistance
 import java.io.File
+import java.lang.StringBuilder
 
-class WorkersRepository {
+object WorkersRepository {
     private val fileWorkers = File("workers.txt")
+    val employees = loadAllEmployees()
 
     fun registerNewEmployee(worker: Worker) {
-        saveWorkerToFile(worker)
+        employees.add(worker)
     }
 
-    private fun saveWorkerToFile(worker: Worker) {
-        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.getSalary()}%${worker.position}\n")
-    }
+//    private fun saveWorkerToFile(worker: Worker) {
+//        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.getSalary()}%${worker.position}\n")
+//    }
 
-    fun loadAllEmployees(): MutableList<Worker>{
+    private fun loadAllEmployees(): MutableList<Worker>{
         val employees = mutableListOf<Worker>()
 
         if (!fileWorkers.exists()) fileWorkers.createNewFile()
@@ -44,24 +46,28 @@ class WorkersRepository {
         return employees
     }
 
+    fun saveChanges() {
+        val content = StringBuilder()
+        for (employee in employees) {
+            content.append("${employee.id}%${employee.name}%${employee.age}%${employee.getSalary()}%${employee.position}\n")
+        }
+        fileWorkers.writeText(content.toString())
+    }
+
     fun fireEmployee(id: Int) {
-        val employees = loadAllEmployees()
-        fileWorkers.writeText("")
         for (employee in employees) {
             if(employee.id != id) {
-                saveWorkerToFile(employee)
+                employees.remove(employee)
+                break
             }
         }
     }
 
     fun changeSalary(id: Int, salary: Int) {
-        val employees = loadAllEmployees()
-        fileWorkers.writeText("")
         for (employee in employees) {
             if(employee.id == id) {
                 employee.setSalary(salary)
             }
-            saveWorkerToFile(employee)
         }
     }
 

@@ -10,8 +10,19 @@ object WorkersRepository {
     val employees
         get() = _employees.toList()
 
-    fun registerNewEmployee(worker: Worker) {
-        _employees.add(worker)
+    fun registerNewEmployee(newWorker: Worker) {
+        for (employee in employees) {
+            if (
+                employee.id == newWorker.id &&
+                employee.name == newWorker.name &&
+                employee.age == newWorker.age &&
+                employee.salary == newWorker.salary &&
+                employee.position == newWorker.position
+            ) {
+                return
+            }
+        }
+        _employees.add(newWorker)
     }
 
 //    private fun saveWorkerToFile(worker: Worker) {

@@ -1,7 +1,4 @@
-import Corporation.Cleaner
-import Corporation.Position
-import Corporation.Supplier
-import Corporation.Worker
+import Corporation.*
 
 class Assistance(id: Int, name: String, age: Int = 0, salary: Int): Worker(
     id = id,
@@ -35,5 +32,9 @@ class Assistance(id: Int, name: String, age: Int = 0, salary: Int): Worker(
 
     override fun buyThings() {
         println("Im buying assistant things")
+    }
+
+    override fun copy(salary: Int, age: Int): Assistance {
+        return Assistance(this.id, this.name, age, salary)
     }
 }

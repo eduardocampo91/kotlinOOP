@@ -6,10 +6,12 @@ import java.lang.StringBuilder
 
 object WorkersRepository {
     private val fileWorkers = File("workers.txt")
-    val employees = loadAllEmployees()
+    private val _employees = loadAllEmployees()
+    val employees
+        get() = _employees.toList()
 
     fun registerNewEmployee(worker: Worker) {
-        employees.add(worker)
+        _employees.add(worker)
     }
 
 //    private fun saveWorkerToFile(worker: Worker) {
@@ -48,27 +50,36 @@ object WorkersRepository {
 
     fun saveChanges() {
         val content = StringBuilder()
-        for (employee in employees) {
-            content.append("${employee.id}%${employee.name}%${employee.age}%${employee.getSalary()}%${employee.position}\n")
+        for (employee in _employees) {
+            content.append("${employee.id}%${employee.name}%${employee.age}%${employee.salary}%${employee.position}\n")
         }
         fileWorkers.writeText(content.toString())
     }
 
     fun fireEmployee(id: Int) {
-        for (employee in employees) {
+        for (employee in _employees) {
             if(employee.id != id) {
-                employees.remove(employee)
+                _employees.remove(employee)
                 break
             }
         }
     }
 
     fun changeSalary(id: Int, salary: Int) {
-        for (employee in employees) {
+        for ((index, employee) in _employees.withIndex()) {
             if(employee.id == id) {
-                employee.setSalary(salary)
+                val newWorker = employee.copy(salary = salary)
+                _employees[index] = newWorker
             }
         }
     }
 
+    fun changeAge(id: Int, age: Int) {
+        for ((index, employee) in _employees.withIndex()) {
+            if(employee.id == id) {
+                val newWorker = employee.copy(age = age)
+                _employees[index] = newWorker
+            }
+        }
+    }
 }

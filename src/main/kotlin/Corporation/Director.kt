@@ -27,4 +27,8 @@ class Director(id: Int, name: String, age: Int, salary: Int): Worker(id = id, na
     override fun buyThings() {
         println("Im buying director things")
     }
+
+    override fun copy(salary: Int, age: Int): Director {
+        return Director(this.id, this.name, age, salary)
+    }
 }

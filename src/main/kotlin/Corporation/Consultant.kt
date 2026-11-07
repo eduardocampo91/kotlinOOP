@@ -34,4 +34,7 @@ class Consultant(id: Int, name: String, age: Int = 0, salary: Int): Worker(
         println("I clean")
     }
 
+    override fun copy(salary: Int, age: Int): Consultant {
+        return Consultant(this.id, this.name, age, salary)
+    }
 }

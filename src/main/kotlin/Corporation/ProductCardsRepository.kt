@@ -5,10 +5,12 @@ import java.lang.StringBuilder
 
 object ProductCardsRepository {
     private val fileProducts = File("product_cards.txt")
-    val productCards = loadAllCards()
+    val _productCards = loadAllCards()
+    val productCards
+        get() = _productCards.toList()
 
     fun registerItemEnum(productCard: ProductCard) {
-        productCards.add(productCard)
+        _productCards.add(productCard)
     }
 
     private fun loadAllCards(): MutableList<ProductCard> {
@@ -50,7 +52,7 @@ object ProductCardsRepository {
 
     fun savingData() {
         val content = StringBuilder()
-        for (productCard in productCards) {
+        for (productCard in _productCards) {
             content.append("${productCard.name}%")
             content.append("${productCard.brand}%")
             content.append("${productCard.price}%")
@@ -74,9 +76,9 @@ object ProductCardsRepository {
     }
 
     fun removeProductCard(name: String) {
-        for ((index, card) in productCards.withIndex()) {
+        for ((index, card) in _productCards.withIndex()) {
             if (card.name == name) {
-                productCards.removeAt(index)
+                _productCards.removeAt(index)
                 break
             }
         }

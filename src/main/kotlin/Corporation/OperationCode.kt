@@ -9,4 +9,5 @@ enum class OperationCode(val title: String) {
     FIRE_EMPLOYEE(title= "Fire employee"),
     SHOW_ALL_EMPLOYEES(title= "Show all employees"),
     CHANGE_SALARY(title= "Change employee salary"),
+    CHANGE_AGE(title = "Change employee age"),
 }

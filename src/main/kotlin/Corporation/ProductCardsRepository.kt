@@ -13,8 +13,8 @@ object ProductCardsRepository {
         _productCards.add(productCard)
     }
 
-    private fun loadAllCards(): MutableList<ProductCard> {
-        val cards = mutableListOf<ProductCard>()
+    private fun loadAllCards(): MutableSet<ProductCard> {
+        val cards = mutableSetOf<ProductCard>()
 
         val valuesText = fileProducts.readText().trim()
         if (valuesText.isEmpty()) {
@@ -76,9 +76,9 @@ object ProductCardsRepository {
     }
 
     fun removeProductCard(name: String) {
-        for ((index, card) in _productCards.withIndex()) {
+        for (card in _productCards) {
             if (card.name == name) {
-                _productCards.removeAt(index)
+                _productCards.remove(card)
                 break
             }
         }

@@ -1,6 +1,6 @@
 package Corporation
 
-abstract class Worker(val id: Int, val name: String, val age: Int = 0, val salary: Int = 15000, val position: Position) {
+abstract class Worker(open val id: Int, open val name: String, open val age: Int = 0, open val salary: Int = 15000, val position: Position) {
 
 //    fun setSalary(salary: Int) {
 //        if(salary < this.salary) {

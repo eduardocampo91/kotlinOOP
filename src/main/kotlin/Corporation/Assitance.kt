@@ -1,6 +1,6 @@
 import Corporation.*
 
-class Assistance(id: Int, name: String, age: Int = 0, salary: Int): Worker(
+data class Assistance(override val id: Int, override val name: String, override val age: Int = 0, override val salary: Int): Worker(
     id = id,
     name = name,
     age = age,

@@ -11,17 +11,17 @@ object WorkersRepository {
         get() = _employees.toList()
 
     fun registerNewEmployee(newWorker: Worker) {
-        for (employee in employees) {
-            if (
-                employee.id == newWorker.id &&
-                employee.name == newWorker.name &&
-                employee.age == newWorker.age &&
-                employee.salary == newWorker.salary &&
-                employee.position == newWorker.position
-            ) {
-                return
-            }
-        }
+//        for (employee in employees) {
+//            if (
+//                employee.id == newWorker.id &&
+//                employee.name == newWorker.name &&
+//                employee.age == newWorker.age &&
+//                employee.salary == newWorker.salary &&
+//                employee.position == newWorker.position
+//            ) {
+//                return
+//            }
+//        }
         _employees.add(newWorker)
     }
 
@@ -29,8 +29,8 @@ object WorkersRepository {
 //        fileWorkers.appendText("${worker.id}%${worker.name}%${worker.age}%${worker.getSalary()}%${worker.position}\n")
 //    }
 
-    private fun loadAllEmployees(): MutableList<Worker>{
-        val employees = mutableListOf<Worker>()
+    private fun loadAllEmployees(): MutableSet<Worker>{
+        val employees = mutableSetOf<Worker>()
 
         if (!fileWorkers.exists()) fileWorkers.createNewFile()
 
@@ -77,19 +77,23 @@ object WorkersRepository {
     }
 
     fun changeSalary(id: Int, salary: Int) {
-        for ((index, employee) in _employees.withIndex()) {
+        for (employee in _employees) {
             if(employee.id == id) {
                 val newWorker = employee.copy(salary = salary)
-                _employees[index] = newWorker
+                _employees.remove(employee)
+                _employees.add(newWorker)
+                break
             }
         }
     }
 
     fun changeAge(id: Int, age: Int) {
-        for ((index, employee) in _employees.withIndex()) {
+        for (employee in _employees) {
             if(employee.id == id) {
                 val newWorker = employee.copy(age = age)
-                _employees[index] = newWorker
+                _employees.remove(employee)
+                _employees.add(newWorker)
+                break
             }
         }
     }

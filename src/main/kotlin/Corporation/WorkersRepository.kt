@@ -97,4 +97,22 @@ object WorkersRepository {
             }
         }
     }
+
+    fun findAssistant(): Assistance? {
+        for (worker in _employees) {
+            if (worker is Assistance) {
+                return worker
+            }
+        }
+        return null
+    }
+
+    fun findDirector(): Director? {
+        for (worker in _employees) {
+            if (worker is Director) {
+                return worker
+            }
+        }
+        return null
+    }
 }

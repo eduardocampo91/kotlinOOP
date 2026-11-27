@@ -1,6 +1,8 @@
 package Corporation
 
 import Assistance
+import java.lang.Exception
+import java.lang.IllegalStateException
 
 fun main() {
 //    val assistance = Assistance()
@@ -69,4 +71,8 @@ fun main() {
     val accountant = Accountant(7, "Rick", 56, 446654)
     accountant.work()
     //accountant.registerItemEnum()
+
+    val director1 = WorkersRepository.findDirector() ?: throw IllegalStateException("Director required. Add a director")
+    director1.printWorker()
+    // nothoing inherits from all classes, to-do is type nothing and throws a not implementet error
 }
